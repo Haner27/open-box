@@ -2,8 +2,12 @@ syntax: glob
 .idea/
 .pytest_cache/
 .idea
+.eggs
 *.yaml
 *.pyc
 *.log.*
 *.log
+dist/
+build/
 ll_test/
+open_box.egg-info/
