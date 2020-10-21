@@ -1,0 +1,9 @@
+syntax: glob
+.idea/
+.pytest_cache/
+.idea
+*.yaml
+*.pyc
+*.log.*
+*.log
+ll_test/
