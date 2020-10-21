@@ -6,9 +6,9 @@ from open_box.redis import get_redis_client
 from open_box.redis.locker import Locker
 
 startup_nodes = [
-    {'host': '192.168.100.52', 'port': '7000'},
-    {'host': '192.168.100.52', 'port': '7001'},
-    {'host': '192.168.100.52', 'port': '7002'},
+    {'host': '<host1>', 'port': '<port1>'},
+    {'host': '<host2>', 'port': '<port2>'},
+    {'host': '<host3>', 'port': '<port3>'},
 ]
 rc = get_redis_client(startup_nodes)
 locker = Locker(rc)

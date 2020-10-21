@@ -3,9 +3,9 @@ from time import sleep
 from open_box.redis import get_redis_client
 
 startup_nodes = [
-    {'host': '192.168.100.52', 'port': '7000'},
-    {'host': '192.168.100.52', 'port': '7001'},
-    {'host': '192.168.100.52', 'port': '7002'},
+    {'host': '<host1>', 'port': '<port1>'},
+    {'host': '<host2>', 'port': '<port2>'},
+    {'host': '<host3>', 'port': '<port3>'},
 ]
 
 
