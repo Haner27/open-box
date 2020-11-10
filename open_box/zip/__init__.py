@@ -37,6 +37,7 @@ class Zip(object):
     def __add_fp(self, alias, fp):
         self.__zf.writestr(zipfile.ZipInfo(alias), fp.getvalue(), zipfile.ZIP_DEFLATED)
         fp.seek(0)
+        fp.close()
 
     def __add_local_file(self, alias, filename):
         self.__zf.write(filename, alias, zipfile.ZIP_DEFLATED)
