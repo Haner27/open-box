@@ -1,6 +1,9 @@
 CHANGES
 =======
 
+* zip close byteio
+* zip close byteio
+* change user info
 * change user info
 * add setup.py and setup.cfg
 * change the license

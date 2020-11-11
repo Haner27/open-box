@@ -10,9 +10,10 @@ zip_logger = Logger('zip', level=INFO, formatter=DEFAULT_TEXT_FORMAT)
 
 
 class Zip(object):
-    def __init__(self):
+    def __init__(self, md5_not_modified=False):
         self.__io = BytesIO()
         self.__zf = zipfile.ZipFile(self.__io, 'a', zipfile.ZIP_DEFLATED, False)
+        self.__md5_not_modified = md5_not_modified
 
     def add_file(self, alias, filename_or_fp):
         """
@@ -35,7 +36,10 @@ class Zip(object):
         return self
 
     def __add_fp(self, alias, fp):
-        self.__zf.writestr(zipfile.ZipInfo(alias), fp.getvalue(), zipfile.ZIP_DEFLATED)
+        if self.__md5_not_modified:
+            self.__zf.writestr(zipfile.ZipInfo(alias), fp.getvalue(), zipfile.ZIP_DEFLATED)
+        else:
+            self.__zf.writestr(alias, fp.getvalue(), zipfile.ZIP_DEFLATED)
         fp.seek(0)
         fp.close()
 
