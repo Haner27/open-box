@@ -20,28 +20,28 @@ mysql:
         f.write(s)
         f.seek(0)
 
-        # 制定邮件信息
+        # define msg object
         msg = Msg()
         msg.set_sender(
             from_,
-        ).set_receivers(  # 收件人
+        ).set_receivers(  # receivers
             'han1@example.com',
             'han2@example.com',
-        ).set_cc(  # 抄送
+        ).set_cc(  # receivers with
             'han3@example.com',
             'han4@example.com',
-        ).set_bcc(  # 秘密抄送
+        ).set_bcc(  # receivers with secret
             'han5@example.com',
-        ).set_subject(  # 主题
-            '淦',
-        ).set_body(  # 内容
-            '来，一起淦！！！',
-        ).add_attachment(  # 附件
+        ).set_subject(  # subject
+            'good',
+        ).set_body(  # body
+            'i am haner27！！！',
+        ).add_attachment(  # attachment
             f,
             'conf.yaml',
         )
 
-        # 发送邮件
+        # send email
         with Mail(host=host) as email:
             email.send(msg)
 

@@ -24,10 +24,10 @@ class RetryError(Exception):
 
 def retry(attempts: int = 3, interval: int = 0):
     """
-    重试装饰器
+    retry decorator
 
-    :param attempts: 重试次数
-    :param interval: 重试间隔
+    :param attempts: try times
+    :param interval: interval times
     :return:
     """
 

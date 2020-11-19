@@ -18,7 +18,7 @@ mysql:
 
         conf = YamlConfigLoader(f.name)
 
-        # 加载完成后直接根据yaml文件的定义来使用配置项
+        # use conf option by yaml file defined
         print(conf.mongodb.database_url)
         print(conf.mongodb.database_name)
         print(conf.elasticsearch.hosts)

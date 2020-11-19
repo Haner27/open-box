@@ -76,7 +76,7 @@ class Msg:
 
 class Mail:
     def __init__(self, host, usr=None, pwd=None):
-        self.__host = host  # 邮件服务
+        self.__host = host
         self.__usr = usr
         self.__pwd = pwd
         self.__smtp = None

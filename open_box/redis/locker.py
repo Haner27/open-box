@@ -30,6 +30,4 @@ class Locker:
         try:
             yield self.__rc.set(locker_key, value, nx=True, ex=timeout)
         finally:
-            # 设置val的值，防止任务超时后执行完任务，finally删除当前正在被锁住的任务的key
-            # 使用lua脚本，原子化get and del 操作，避免任务执行完删除别人任务的锁的情况
             self.__rc.eval(self.LOCKER_RELEASE_LOCAL_LUA_SCRIPT, 1, locker_key, value)

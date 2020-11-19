@@ -11,7 +11,7 @@ class Audio(File):
     def __init__(self, input, filename=''):
         super().__init__(input, filename)
         if not self.content_type.startswith('audio'):
-            raise FileInputTypeError('Audio仅仅支持音频文件输入')
+            raise FileInputTypeError('Only support audio input')
         duration = self.__get_audio_info()
         self.duration = duration
 

@@ -46,7 +46,7 @@ def synchronized(func):
 
 
 class LeakyBucketLimiter(Limiter):
-    """漏桶限流器"""
+    """leaky limiter"""
     def __init__(self, capacity: int, rate: LimitRate):
         self.__capacity = capacity
         self.__rate = rate
@@ -71,7 +71,7 @@ class LeakyBucketLimiter(Limiter):
 
     @staticmethod
     def timestamp():
-        """时间戳:单位毫秒"""
+        """ms"""
         return int(time() * 1000)
 
     def set_last_time(self, last_time):
@@ -98,7 +98,7 @@ class LeakyBucketLimiter(Limiter):
 
 
 class TokenBucketLimiter(Limiter):
-    """令牌桶限流器"""
+    """token limiter"""
 
     def __init__(self, capacity: int, rate: LimitRate):
         self.__capacity = capacity
@@ -124,7 +124,7 @@ class TokenBucketLimiter(Limiter):
 
     @staticmethod
     def timestamp():
-        """时间戳:单位毫秒"""
+        """ms"""
         return int(time() * 1000)
 
     def set_last_time(self, last_time):

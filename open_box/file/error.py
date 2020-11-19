@@ -3,17 +3,17 @@ ERR_GET_FILE_FROM_URL = 101
 ERR_UNKNOWN = -1
 
 ERRORS = {
-    ERR_FILE_INPUT_TYPE: '文件初始化输入数据类型错误',
-    ERR_GET_FILE_FROM_URL: '从url获取文件失败',
-    ERR_UNKNOWN: '未知错误',
+    ERR_FILE_INPUT_TYPE: 'data type error of file input',
+    ERR_GET_FILE_FROM_URL: 'load file data from url failed',
+    ERR_UNKNOWN: 'unknown error',
 }
 
 
 class ImageError(Exception):
     def __init__(self, msg, code=None, extras=None):
         """
-        :param msg: 具体错误信息
-        :param code: 错误码
+        :param msg: error msg
+        :param code: error code
         :param extras:
         """
         self.msg = msg

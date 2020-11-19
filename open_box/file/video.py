@@ -12,7 +12,7 @@ class Video(File):
         super().__init__(input, filename)
         width, height, duration = self.__get_video_info()
         if not self.content_type.startswith('video'):
-            raise FileInputTypeError('Video仅仅支持视频文件输入')
+            raise FileInputTypeError('Only support video input')
         self.width = width
         self.height = height
         self.duration = duration

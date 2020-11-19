@@ -4,14 +4,14 @@ import xlsxwriter
 
 
 def get_format(workbook, bold=False):
-    f = workbook.add_format()  # 样式
+    f = workbook.add_format()
     if bold:
         f.set_bold()
-    f.set_font_name('Arial')  # 字体名称
-    f.set_font_size(11)  # 字体大小
-    f.set_align('left')  # 水平置中
-    f.set_align('vcenter')  # 垂直置中
-    f.set_font_color('black')  # 字体颜色
+    f.set_font_name('Arial')
+    f.set_font_size(11)
+    f.set_align('left')
+    f.set_align('vcenter')
+    f.set_font_color('black')
     return f
 
 

@@ -51,7 +51,6 @@ def cal_minutes(seconds):
 
 
 def covert_duration_text(seconds, with_unit=True):
-    """转换时长文本"""
     hours, seconds = cal_hours(seconds)
     minutes, seconds = cal_minutes(seconds)
     if with_unit:
@@ -68,17 +67,16 @@ def covert_duration_text(seconds, with_unit=True):
 
 
 def covert_message_duration_text(dt):
-    """转换消息发送后距当前时间间隔文本"""
     ts = to_timestamp(dt)
     nts = timestamp()
     delta = nts - ts
     if delta < 60:
-        return '刚刚'
+        return 'recently'
     elif 60 <= delta < 3600:
-        return '{0}分钟前'.format(int(delta // 60))
+        return '{0} minutes ago'.format(int(delta // 60))
     elif 3600 <= delta < 86400:
-        return '{0}小时前'.format(int(delta // 3600))
+        return '{0} hours ago'.format(int(delta // 3600))
     elif 86400 <= delta < 86400 * 2:
-        return '昨天 {}'.format(format_datetime(dt, TIME_FORMAT))
+        return 'yesterday {}'.format(format_datetime(dt, TIME_FORMAT))
     else:
         return format_datetime(dt, DEFAULT_DATETIME_FORMAT)

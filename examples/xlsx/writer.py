@@ -10,9 +10,9 @@ build_data = [
     {
         'sheet_name': 'Sheet1',
         'header': [
-            '姓名',
-            '年龄',
-            '性别',
+            'name',
+            'age',
+            'gender',
         ],
         'data': data,
     },
@@ -20,12 +20,12 @@ build_data = [
 
 
 def output_excel():
-    xlsx_filename = '用户报表.xlsx'
+    xlsx_filename = 'user1.xlsx'
     build_xlsx(xlsx_filename, build_data)
 
 
 def output_excel_fp():
-    xlsx_filename = '用户报表2.xlsx'
+    xlsx_filename = 'user2.xlsx'
     fp = xlsx_for_file(build_data)
     with open(xlsx_filename, 'wb') as f:
         f.write(fp.read())
