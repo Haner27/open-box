@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* delete all chinese chars
 * zip package add option to control md5 hash
 * zip package add option to control md5 hash
 * zip close byteio
