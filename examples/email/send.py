@@ -5,8 +5,8 @@ from open_box.email import Msg
 
 
 def send_email():
-    from_ = 'no-reply@17zuoye.com'
-    host = 'smtp.dc.17zuoye.net'
+    from_ = '<from>'
+    host = '<host>'
 
     with BytesIO() as f:
         s = b"""mongodb:
