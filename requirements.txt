@@ -1,3 +1,4 @@
+addict==2.4.0
 redis-py-cluster==2.1.0
 bson==0.5.10
 pyaml==20.4.0
@@ -6,3 +7,4 @@ xlrd==1.2.0
 python-magic==0.4.15
 pillow==8.0.0
 pymediainfo==4.2.1
+
