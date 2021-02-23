@@ -1,6 +1,7 @@
 import inspect
 import json
 from functools import wraps, partial
+from types import FunctionType
 from logging import INFO
 
 from rediscluster import RedisCluster
@@ -55,8 +56,9 @@ def build_key(key_prefix, params, func_name=None):
 
 
 class CacheContext:
-    def __init__(self, rc: RedisCluster, key_prefix: str, timeout: int = 600, **params):
+    def __init__(self, rc: RedisCluster, _disabled_func: FunctionType, key_prefix: str, timeout: int = 600, **params):
         self.__rc = rc
+        self.__disabled_func = _disabled_func
         self.__params = params
         self.__key_prefix = key_prefix
         self.__key = None
@@ -73,6 +75,9 @@ class CacheContext:
         return self.__key_prefix
 
     def __enter__(self):
+        if self.__disabled_func():
+            return self
+
         code = check_params(self.__params)
         if code:
             self.__key = build_key(self.__key_prefix, self.__params)
@@ -87,6 +92,9 @@ class CacheContext:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.__disabled_func():
+            return True
+
         if exc_val:
             cache_logger.error('cache value failed: {}'.format(exc_val))
             return True
@@ -136,10 +144,13 @@ def load_params(func, *args, **kwargs):
     return params
 
 
-def cache_decorator(rc: RedisCluster, key_prefix: str, timeout: int = 600):
+def cache_decorator(rc: RedisCluster, _disabled_func: FunctionType, key_prefix: str, timeout: int = 600):
     def wrapper(func):
         @wraps(func)
         def __wrapper(*args, **kwargs):
+            if _disabled_func():
+                return func(*args, **kwargs)
+
             params = load_params(func, *args, **kwargs)
             code = check_params(params)
             if code:
@@ -162,6 +173,7 @@ def cache_decorator(rc: RedisCluster, key_prefix: str, timeout: int = 600):
 
 
 class WrapperCache:
-    def __init__(self, rc: RedisCluster):
-        self.CacheContext = partial(CacheContext, rc)
-        self.CacheDecorator = partial(cache_decorator, rc)
+    def __init__(self, rc: RedisCluster, disabled_func: FunctionType=lambda :False):
+        self.__disabled_func = disabled_func
+        self.CacheContext = partial(partial(CacheContext, rc), self.__disabled_func)
+        self.CacheDecorator = partial(partial(cache_decorator, rc), self.__disabled_func)

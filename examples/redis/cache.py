@@ -2,11 +2,12 @@ from open_box.redis import get_redis_client
 from open_box.redis.cache import WrapperCache
 
 startup_nodes = [
-    {'host': '<host1>', 'port': '<port1>'},
-    {'host': '<host2>', 'port': '<port2>'},
-    {'host': '<host3>', 'port': '<port3>'},
+    {'host': '<host>', 'port': '<port>'},
+    {'host': '<host>', 'port': '<port>'},
+    {'host': '<host>', 'port': '<port>'},
 ]
 rc = get_redis_client(startup_nodes)
+# cache = WrapperCache(rc, disabled_func=lambda : False)
 cache = WrapperCache(rc)
 
 
