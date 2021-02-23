@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* update config & cfg config
 * add tracker
 * add redis limiter
 * add tracker
