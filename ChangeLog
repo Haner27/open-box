@@ -1,6 +1,9 @@
 CHANGES
 =======
 
+* [feature]add disable\_func option to cache
+* add enum & func
+* update config & cfg config
 * update config & cfg config
 * add tracker
 * add redis limiter
