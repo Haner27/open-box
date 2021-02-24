@@ -1,35 +1,33 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from collections import OrderedDict
-
 import six
 
 
 def _is_descriptor(obj):
     """Returns True if obj is a descriptor, False otherwise."""
     return (
-        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+            hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
     )
 
 
 def _is_dunder(name):
     """Returns True if a __dunder__ name, False otherwise."""
     return (
-        name[:2] == name[-2:] == "__"
-        and name[2:3] != "_"
-        and name[-3:-2] != "_"
-        and len(name) > 4
+            name[:2] == name[-2:] == "__"
+            and name[2:3] != "_"
+            and name[-3:-2] != "_"
+            and len(name) > 4
     )
 
 
 def _is_sunder(name):
     """Returns True if a _sunder_ name, False otherwise."""
     return (
-        name[0] == name[-1] == "_"
-        and name[1:2] != "_"
-        and name[-2:-1] != "_"
-        and len(name) > 2
+            name[0] == name[-1] == "_"
+            and name[1:2] != "_"
+            and name[-2:-1] != "_"
+            and len(name) > 2
     )
 
 
@@ -133,9 +131,8 @@ class EnumMeta(type):
         # hacking to generate an _EnumDict Object
         dct = _dct
 
-        # save enum items into separate mapping so they don't get baked into
-        # the new class
-        members = OrderedDict([(k, dct[k]) for k in dct._member_names])
+        # save enum items into separate mapping so they don't get baked into the new class
+        members = dict([(k, dct[k]) for k in dct._member_names])
         for name in dct._member_names:
             del dct[name]
 
@@ -151,11 +148,12 @@ class EnumMeta(type):
         # create our new Enum type
         enum_class = super(EnumMeta, mcs).__new__(mcs, cls, bases, dct)
         enum_class._member_names_ = []  # names in definition order
-        enum_class._member_map_ = OrderedDict()  # name->value map
+        enum_class._member_map_ = dict()  # name->value map
 
         # Reverse value->name map for hashable values.
         enum_class._value2member_map_ = {}
         enum_class.enum_dict = {}
+        enum_class._value2name_map_ = {}
         enum_class.choices = []
 
         # instantiate them, checking for duplicates as we go
@@ -185,6 +183,7 @@ class EnumMeta(type):
             # now add to _member_map_
             enum_class._member_map_[member_name] = enum_member
             enum_class._value2member_map_[real_value] = enum_member
+            enum_class._value2name_map_[real_value] = member_name
             enum_class.enum_dict[real_value] = desc
             enum_class.choices.append([real_value, desc])
 
@@ -218,6 +217,9 @@ class EnumMeta(type):
 
     def __desc__(cls, value):
         return cls._value2member_map_[value]._desc_
+
+    def _name_(cls, value):
+        return cls._value2name_map_[value]
 
     @property
     def __members__(cls):
@@ -276,8 +278,8 @@ class Enum(metaclass=EnumMeta):
         return "<%s.%s: %r>" % (self.__class__.__name__, self._name_, self._desc_)
 
     def __str__(self):
-        if self.__desc__:
-            return "%s.%s(%s)" % (self.__class__.__name__, 1, self.__desc__)
+        if self._desc_:
+            return "%s.%s(%s)" % (self.__class__.__name__, 1, self._desc_)
         else:
             return "%s.%s" % (self.__class__.__name__, 1)
 
@@ -288,6 +290,16 @@ class Enum(metaclass=EnumMeta):
         """
         try:
             return cls.__desc__(key)
+        except KeyError:
+            return default_value
+
+    @classmethod
+    def get_name(cls, key, default_value=None):
+        """
+        获取枚举定义名称信息
+        """
+        try:
+            return cls._name_(key)
         except KeyError:
             return default_value
 
@@ -313,7 +325,10 @@ class Enum(metaclass=EnumMeta):
 
 
 def unique(enumeration):
-    """Class decorator for enumerations ensuring unique member values."""
+    """
+    Class decorator for enumerations ensuring unique member values.
+    do not define another same value to two different names.
+    """
     duplicates = []
     for name, member in six.iteritems(enumeration.__members__):
         if name != member._name_:
@@ -329,15 +344,22 @@ def unique(enumeration):
 
 
 if __name__ == "__main__":
-
+    @unique
     class DEMO(Enum):
         """
         for example
+        eg:
+        备注name = (枚举类型, 描述信息)
         """
 
         TEST1 = (1, "测试属性1")
         TEST2 = (2, "测试属性2")
 
-    print(DEMO.get_desc(DEMO.TEST1))
-    print(DEMO().to_dict())
-    print(DEMO.TEST1)
+
+    print(DEMO.get_desc(DEMO.TEST1))  # 获取枚举描述信息
+    print(DEMO().to_dict())  # 转换dict
+    print(dict(DEMO))  # 同上
+    print(DEMO.TEST1)  # 取枚举类型
+    print(DEMO().member_map())  # 取枚举成员映射
+    print(DEMO.__doc__)  # 获取枚举类备注信息
+    print(DEMO.get_name(DEMO.TEST1))  # 获取枚举类型标注名称
