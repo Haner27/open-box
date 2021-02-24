@@ -9,25 +9,28 @@ import six
 def _is_descriptor(obj):
     """Returns True if obj is a descriptor, False otherwise."""
     return (
-            hasattr(obj, '__get__') or
-            hasattr(obj, '__set__') or
-            hasattr(obj, '__delete__'))
+        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+    )
 
 
 def _is_dunder(name):
     """Returns True if a __dunder__ name, False otherwise."""
-    return (name[:2] == name[-2:] == '__' and
-            name[2:3] != '_' and
-            name[-3:-2] != '_' and
-            len(name) > 4)
+    return (
+        name[:2] == name[-2:] == "__"
+        and name[2:3] != "_"
+        and name[-3:-2] != "_"
+        and len(name) > 4
+    )
 
 
 def _is_sunder(name):
     """Returns True if a _sunder_ name, False otherwise."""
-    return (name[0] == name[-1] == '_' and
-            name[1:2] != '_' and
-            name[-2:-1] != '_' and
-            len(name) > 2)
+    return (
+        name[0] == name[-1] == "_"
+        and name[1:2] != "_"
+        and name[-2:-1] != "_"
+        and len(name) > 2
+    )
 
 
 # until EnumMeta finishes running the first time the Enum class doesn't exist.
@@ -54,16 +57,20 @@ class _EnumDict(dict):
 
         def _check_basetype(v):
             if not isinstance(v, self._allow_types):
-                raise TypeError('Value type must be one of [%s], '
-                                'instead of %s' % (', '.join(map(str, self._allow_types)), type(v)))
+                raise TypeError(
+                    "Value type must be one of [%s], "
+                    "instead of %s" % (", ".join(map(str, self._allow_types)), type(v))
+                )
 
         if type(v) is tuple:
             if len(v) != 2:
-                raise TypeError('Tuple enum definition must be length of 2')
+                raise TypeError("Tuple enum definition must be length of 2")
             _check_basetype(v[0])
             if not isinstance(v[1], six.string_types):
-                raise TypeError('The second element of tuple enum definition '
-                                'must be string, i.e. an explanation of the enum value')
+                raise TypeError(
+                    "The second element of tuple enum definition "
+                    "must be string, i.e. an explanation of the enum value"
+                )
         else:
             _check_basetype(v)
 
@@ -82,16 +89,16 @@ class _EnumDict(dict):
 
         """
         if _is_sunder(key):
-            raise ValueError('_names_ are reserved for future Enum use')
+            raise ValueError("_names_ are reserved for future Enum use")
         elif _is_dunder(key):
             pass
         elif key in self._member_names:
             # descriptor overwriting an enum?
-            raise TypeError('Attempted to reuse key: %r' % key)
+            raise TypeError("Attempted to reuse key: %r" % key)
         elif not _is_descriptor(value):
             if key in self:
                 # enum overwriting a descriptor?
-                raise TypeError('Key already defined as: %r' % self[key])
+                raise TypeError("Key already defined as: %r" % self[key])
             # value must be BASE_TYPE, or tuple of (BASE_TYPE, six.string_types)
             # BASE_TYPE is six.string_types or integer
             self._check_value_type(value)
@@ -107,7 +114,7 @@ class EnumMeta(type):
         all_types = set(six.integer_types) | {six.text_type, str}
         allow_types = set()
         if Enum is None:  # Enum base class
-            assert cls == 'Enum'
+            assert cls == "Enum"
             return tuple(all_types)
         else:
             for base in bases:
@@ -133,10 +140,13 @@ class EnumMeta(type):
             del dct[name]
 
         # check for illegal enum names (any others?)
-        invalid_names = set(members) & {'mro', }
+        invalid_names = set(members) & {
+            "mro",
+        }
         if invalid_names:
-            raise ValueError('Invalid enum member name: {0}'.format(
-                ','.join(invalid_names)))
+            raise ValueError(
+                "Invalid enum member name: {0}".format(",".join(invalid_names))
+            )
 
         # create our new Enum type
         enum_class = super(EnumMeta, mcs).__new__(mcs, cls, bases, dct)
@@ -158,7 +168,7 @@ class EnumMeta(type):
                 desc = value[1]
             else:
                 real_value = value
-                desc = ''
+                desc = ""
             enum_member = enum_class()
             enum_member._name_ = member_name
             enum_member._value_ = real_value
@@ -184,11 +194,8 @@ class EnumMeta(type):
         return value in cls._value2member_map_
 
     def __delattr__(cls, attr):
-        # nicer error message when someone tries to delete an attribute
-        # (see issue19025).
         if attr in cls._member_map_:
-            raise AttributeError(
-                "%s: cannot delete Enum member." % cls.__name__)
+            raise AttributeError("%s: cannot delete Enum member." % cls.__name__)
         super(EnumMeta, cls).__delattr__(attr)
 
     def __getattr__(cls, name):
@@ -226,11 +233,11 @@ class EnumMeta(type):
         return cls._member_map_[name]
 
     def __iter__(cls):
-        """Returns a tuple of tuples(member.value, member.desc) for each member
-        """
-        return ((
-            cls._member_map_[name]._value_,
-            cls._member_map_[name]._desc_) for name in cls._member_names_)
+        """Returns a tuple of tuples(member.value, member.desc) for each member"""
+        return (
+            (cls._member_map_[name]._value_, cls._member_map_[name]._desc_)
+            for name in cls._member_names_
+        )
 
     def __len__(cls):
         return len(cls._member_names_)
@@ -249,9 +256,9 @@ class EnumMeta(type):
         resulting in an inconsistent Enumeration.
 
         """
-        member_map = cls.__dict__.get('_member_map_', {})
+        member_map = cls.__dict__.get("_member_map_", {})
         if name in member_map:
-            raise AttributeError('Cannot reassign members.')
+            raise AttributeError("Cannot reassign members.")
         super(EnumMeta, cls).__setattr__(name, value)
 
     def __dir__(self):
@@ -266,8 +273,7 @@ class Enum(metaclass=EnumMeta):
     """
 
     def __repr__(self):
-        return "<%s.%s: %r>" % (
-            self.__class__.__name__, self._name_, self._desc_)
+        return "<%s.%s: %r>" % (self.__class__.__name__, self._name_, self._desc_)
 
     def __str__(self):
         if self.__desc__:
@@ -286,9 +292,22 @@ class Enum(metaclass=EnumMeta):
             return default_value
 
     @classmethod
-    def to_json(cls, default_value=None):
+    def to_dict(cls, default_value=None):
+        """
+        返回枚举类型字典
+        """
         try:
             return cls.enum_dict
+        except KeyError:
+            return default_value
+
+    @classmethod
+    def member_map(cls, default_value=None):
+        """
+        返回枚举映射
+        """
+        try:
+            return cls._member_map_
         except KeyError:
             return default_value
 
@@ -300,24 +319,25 @@ def unique(enumeration):
         if name != member._name_:
             duplicates.append((name, member._name_))
     if duplicates:
-        alias_details = ', '.join(
-            ["%s -> %s" % (alias, name) for (alias, name) in duplicates])
-        raise ValueError('duplicate values found in %r: %s' %
-                         (enumeration, alias_details))
+        alias_details = ", ".join(
+            ["%s -> %s" % (alias, name) for (alias, name) in duplicates]
+        )
+        raise ValueError(
+            "duplicate values found in %r: %s" % (enumeration, alias_details)
+        )
     return enumeration
 
 
-if __name__ == '__main__':
-    class Demo(Enum):
+if __name__ == "__main__":
+
+    class DEMO(Enum):
         """
         for example
         """
-        test1 = (1, "测试属性1")
-        test2 = (2, "测试属性2")
 
+        TEST1 = (1, "测试属性1")
+        TEST2 = (2, "测试属性2")
 
-    # print(Demo()._desc_)
-    a = Demo().to_json()
-    print(a)
-    print(Demo.get_desc(Demo.test1))
-    print(Demo.test1)
+    print(DEMO.get_desc(DEMO.TEST1))
+    print(DEMO().to_dict())
+    print(DEMO.TEST1)
