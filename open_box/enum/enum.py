@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 import six
 
 
@@ -154,6 +152,7 @@ class EnumMeta(type):
         enum_class._value2member_map_ = {}
         enum_class.enum_dict = {}
         enum_class._value2name_map_ = {}
+        enum_class._name_map_ = {}
         enum_class.choices = []
 
         # instantiate them, checking for duplicates as we go
@@ -184,6 +183,7 @@ class EnumMeta(type):
             enum_class._member_map_[member_name] = enum_member
             enum_class._value2member_map_[real_value] = enum_member
             enum_class._value2name_map_[real_value] = member_name
+            enum_class._name_map_[member_name] = real_value
             enum_class.enum_dict[real_value] = desc
             enum_class.choices.append([real_value, desc])
 
@@ -230,6 +230,10 @@ class EnumMeta(type):
 
         """
         return cls._member_map_.copy()
+
+    @property
+    def __map__(cls):
+        return cls._name_map_.copy()
 
     def __getitem__(cls, name):
         return cls._member_map_[name]
@@ -278,10 +282,7 @@ class Enum(metaclass=EnumMeta):
         return "<%s.%s: %r>" % (self.__class__.__name__, self._name_, self._desc_)
 
     def __str__(self):
-        if self._desc_:
-            return "%s.%s(%s)" % (self.__class__.__name__, 1, self._desc_)
-        else:
-            return "%s.%s" % (self.__class__.__name__, 1)
+        return f"{self._desc_}"
 
     @classmethod
     def get_desc(cls, key, default_value=None):
@@ -363,3 +364,6 @@ if __name__ == "__main__":
     print(DEMO().member_map())  # 取枚举成员映射
     print(DEMO.__doc__)  # 获取枚举类备注信息
     print(DEMO.get_name(DEMO.TEST1))  # 获取枚举类型标注名称
+    print(DEMO.__map__)  # 获取name value map
+    print(DEMO.__members__)  # 得到属性对象映射
+    print(DEMO.__members__.get("TEST1"))  # str 反射 desc
