@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* [fix]fix bug: og json formatter not support python3.8
 * add name value member map
 * add reverse enum value to name func
 * add enum func & change catalog
