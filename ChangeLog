@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+* add name value member map
+* add reverse enum value to name func
+* add enum func & change catalog
+* [feature]add disable\_func option to cache
 * [feature]add disable\_func option to cache
 * add enum & func
 * update config & cfg config

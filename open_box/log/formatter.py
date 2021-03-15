@@ -42,7 +42,6 @@ class JsonFormatter(Formatter):
     converter = time.localtime
 
     def __init__(self, fmt, datefmt):
-        super().__init__(fmt, datefmt)
         self._style = JsonStyle(fmt)
         self._fmt = self._style._fmt
         self.datefmt = datefmt

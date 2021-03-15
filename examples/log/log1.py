@@ -74,10 +74,10 @@ def with_email_log():
 
 
 if __name__ == '__main__':
-    base()
+    # base()
     # text_formatter()
     # json_formatter()
-    # json_formatter_with_fields()
+    json_formatter_with_fields()
     # with_file_log()
     # with_tiemd_file_log()
     # with_email_log()
